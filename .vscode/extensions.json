@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "wix.vscode-import-cost",
+    "prisma.prisma",
+    "bradlc.vscode-tailwindcss"
+  ]
+}
