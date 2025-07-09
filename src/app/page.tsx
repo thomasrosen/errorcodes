@@ -1,35 +1,31 @@
-'use client';
+'use client'
+// 'use client' so we generate a new code on every page load
 
-import { customAlphabet } from 'nanoid';
-import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { useCallback, useState } from 'react'
+import { toast } from 'sonner'
+import { formatNiceIsoDate } from '@/lib/formatNiceIsoDate'
+import { generateCode } from '@/lib/generateCode'
 
 export default function Home() {
-  const [codeLength, setCodeLength] = useState(8);
-  const [errorCode, setErrorCode] = useState('');
-  const [lastRefresh, setLastRefresh] = useState<Date>();
+  const [codeLength, setCodeLength] = useState(8)
+  const [errorCode, setErrorCode] = useState(generateCode(codeLength))
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
 
   const reloadErrorCode = useCallback(() => {
-    const alphabet =
-      '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    const nanoid = customAlphabet(alphabet, codeLength);
-
-    const new_error_code = nanoid();
-    setErrorCode(new_error_code);
-    setLastRefresh(new Date());
-  }, [codeLength]);
-
-  useEffect(() => {
-    reloadErrorCode();
-  }, [reloadErrorCode]);
+    setErrorCode(generateCode(codeLength))
+    setLastRefresh(new Date())
+  }, [codeLength])
 
   const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast('🎉 Copied 2 Clipboard');
-    reloadErrorCode();
-  };
+    // copy code to the clipboard
+    navigator.clipboard.writeText(text)
+    toast('🎉 Copied 2 Clipboard')
 
-  const prefixes = ['ERROR', 'INFO', 'WARN', 'LOG'];
+    // generate a new code after copy
+    reloadErrorCode()
+  }
+
+  const prefixes = ['ERROR', 'INFO', 'WARN', 'LOG']
 
   return (
     <main className="mx-auto w-[600px] max-w-full p-4 text-2xl lg:py-10">
@@ -38,31 +34,32 @@ export default function Home() {
 
       <hr className="my-8" />
 
-      <pre
-        className="mb-8 cursor-copy whitespace-normal"
+      <button
+        className="mb-8 cursor-copy whitespace-normal font-mono"
         onClick={() => handleCopy(errorCode)}
+        type="button"
       >
         <code>{errorCode}</code>
-      </pre>
+      </button>
 
       <label>
         Code Length:{' '}
         <input
           className="border bg-transparent p-1"
-          type="number"
           defaultValue={codeLength}
-          min={1}
           max={20}
+          min={1}
           onChange={(e) => {
-            const newNumber = Number(e.target.value);
+            const newNumber = Number(e.target.value)
             if (newNumber < 1) {
-              setCodeLength(1);
+              setCodeLength(1)
             } else if (newNumber > 20) {
-              setCodeLength(20);
+              setCodeLength(20)
             } else {
-              setCodeLength(newNumber);
+              setCodeLength(newNumber)
             }
           }}
+          type="number"
         />
       </label>
 
@@ -70,15 +67,16 @@ export default function Home() {
 
       <div className="flex flex-col gap-8">
         {prefixes.map((prefix) => (
-          <pre
+          <button
+            className="cursor-copy whitespace-normal font-mono"
             key={prefix}
-            className="cursor-copy whitespace-normal"
             onClick={() => handleCopy(`${prefix}_${errorCode}`)}
+            type="button"
           >
             <code>
               {prefix}_{errorCode}
             </code>
-          </pre>
+          </button>
         ))}
       </div>
 
@@ -86,12 +84,12 @@ export default function Home() {
 
       <div className="flex flex-col gap-8">
         {prefixes.map((prefix) => {
-          const isError = prefix === 'ERROR';
+          const isError = prefix === 'ERROR'
 
           return (
-            <pre
+            <button
+              className="cursor-copy whitespace-normal font-mono"
               key={prefix}
-              className="cursor-copy whitespace-normal"
               onClick={() =>
                 handleCopy(
                   `console.${prefix.toLowerCase()}('${prefix}_${errorCode}', ${
@@ -99,22 +97,20 @@ export default function Home() {
                   })`
                 )
               }
+              type="button"
             >
               <code>
                 console.{prefix.toLowerCase()}(&apos;{prefix}_{errorCode}&apos;,
                 {isError ? 'error' : 'data'})
               </code>
-            </pre>
-          );
+            </button>
+          )
         })}
       </div>
 
       <hr className="my-8" />
 
-      <pre className="whitespace-normal">
-        Last Refreshed:{' '}
-        {lastRefresh?.toISOString().replace(/T/, ' ').replace(/\..+/, '')}
-      </pre>
+      <pre className="whitespace-normal">Last Refreshed: {formatNiceIsoDate(lastRefresh)}</pre>
     </main>
-  );
+  )
 }
