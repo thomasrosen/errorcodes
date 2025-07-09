@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import { Toaster } from '@/components/ui/sonner'
 import '@/styles/index.css'
-
-const inter = Inter({ subsets: ['latin'] })
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import '@fontsource-variable/petrona'
+import '@fontsource/fira-code'
 
 export const metadata: Metadata = {
   title: 'Error Codes',
-  description: '',
+  description: 'Generate error codes for your projects to find logs faster.',
 }
 
 export default function RootLayout({
@@ -17,8 +17,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {children}
+      <body>
+        <NuqsAdapter>{children}</NuqsAdapter>
         <Toaster />
       </body>
     </html>

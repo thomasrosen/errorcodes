@@ -34,9 +34,6 @@
           "fix": "safe"
         },
         "noUnreachable": "off"
-      },
-      "nursery": {
-        "noUnknownAtRule": "off"
       }
     }
   }
