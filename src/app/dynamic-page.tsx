@@ -16,7 +16,7 @@ function ClickableCode({ children, className, ...props }: React.ComponentProps<'
     <button
       {...props}
       className={cn(
-        'block w-auto cursor-copy whitespace-pre-wrap text-start font-mono hover:opacity-60',
+        'block w-auto cursor-copy whitespace-pre-wrap text-start font-mono text-[1.3rem] hover:opacity-60',
         className
       )}
       type="button"
@@ -47,7 +47,7 @@ export default function Home() {
   const longestPrefixLength = Math.max(...prefixes.map((p) => p.length))
 
   return (
-    <main className="mx-auto mb-48 w-[600px] max-w-full space-y-8 p-4 text-2xl lg:py-8">
+    <main className="mx-auto mb-48 w-[600px] max-w-full space-y-6 p-6 text-2xl lg:py-12">
       <h1 className="font-bold text-5xl">Get Your Error Code</h1>
       <p>
         Generate error codes for your projects to find logs faster.
@@ -66,10 +66,10 @@ export default function Home() {
         .
       </p>
 
-      <label>
-        Code Length:{' '}
+      <label className="flex items-center gap-3">
+        <span className="shrink-0">Code Length:</span>
         <input
-          className="border bg-transparent p-1"
+          className="-my-1 w-full border border-[currentColor]/30 bg-transparent px-3 py-1 font-mono text-lg"
           defaultValue={codeLength}
           max={20}
           min={1}
@@ -121,6 +121,18 @@ export default function Home() {
       <Divider />
 
       <div>Last Refreshed: {lastRefresh ? lastRefresh.toLocaleString() : 'Loading…'}</div>
+      <div>
+        Website created by{' '}
+        <Link href="https://thomasrosen.com" target="_blank">
+          Thomas Rosen
+        </Link>
+        .<br />
+        Code on{' '}
+        <Link href="https://github.com/thomasrosen/error-codes" target="_blank">
+          GitHub
+        </Link>
+        .
+      </div>
     </main>
   )
 }
